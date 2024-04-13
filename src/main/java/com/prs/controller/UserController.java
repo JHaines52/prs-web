@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.prs.model.Request;
 import com.prs.model.User;
 import com.prs.model.UserLogin;
 import com.prs.db.UserRepo;
@@ -40,7 +41,12 @@ public class UserController {
 
 	@PostMapping("")
 	public User addUser(@RequestBody User user) {
-
+		 /*Optional<User> User = userRepo.findByUser(user.getUsername());
+		 
+		  if (User.isPresent()) {
+			  System.err.println("A request with the same description and date needed already exists.");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request Not Valid");
+		    }*/
 		// TODO Check for existence by user.getId()before save
 		return userRepo.save(user);
 

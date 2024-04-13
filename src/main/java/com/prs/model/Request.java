@@ -15,29 +15,29 @@ public class Request {
 	private User user;
 	private String description;
 	private String justification;
-	private LocalDate dateneeded;
-	private String deliverymode;
+	private LocalDate dateNeeded;
+	private String deliveryMode;
 	private String status;
-	private float total;
-	private LocalDateTime submitteddate;
-	private String reasonforrejection;
+	private float total = 0.0f;
+	private LocalDateTime submittedDate = LocalDateTime.now();
+	private String reasonForRejection;
 	public Request() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public Request(int id, User user, String description, String justification, LocalDate dateneeded,
-			String deliverymode, String status, float total, LocalDateTime submitteddate, String reasonforrejection) {
+	public Request(int id, User user, String description, String justification, LocalDate dateNeeded,
+			String deliveryMode, String status, float total, LocalDateTime submittedDate, String reasonForRejection) {
 		super();
 		this.id = id;
 		this.user = user;
 		this.description = description;
 		this.justification = justification;
-		this.dateneeded = dateneeded;
-		this.deliverymode = deliverymode;
+		this.dateNeeded = dateNeeded;
+		this.deliveryMode = deliveryMode;
 		this.status = status;
 		this.total = total;
-		this.submitteddate = submitteddate;
-		this.reasonforrejection = reasonforrejection;
+		this.submittedDate = submittedDate;
+		this.reasonForRejection = reasonForRejection;
 	}
 	public int getId() {
 		return id;
@@ -63,17 +63,17 @@ public class Request {
 	public void setJustification(String justification) {
 		this.justification = justification;
 	}
-	public LocalDate getDateneeded() {
-		return dateneeded;
+	public LocalDate getDateNeeded() {
+		return dateNeeded;
 	}
-	public void setDateneeded(LocalDate dateneeded) {
-		this.dateneeded = dateneeded;
+	public void setDateNeeded(LocalDate dateNeeded) {
+		this.dateNeeded = dateNeeded;
 	}
-	public String getDeliverymode() {
-		return deliverymode;
+	public String getDeliveryMode() {
+		return deliveryMode;
 	}
-	public void setDeliverymode(String deliverymode) {
-		this.deliverymode = deliverymode;
+	public void setDeliveryMode(String deliveryMode) {
+		this.deliveryMode = deliveryMode;
 	}
 	public String getStatus() {
 		return status;
@@ -87,26 +87,25 @@ public class Request {
 	public void setTotal(float total) {
 		this.total = total;
 	}
-	public LocalDateTime getSubmitteddate() {
-		return submitteddate;
+	public LocalDateTime getSubmittedDate() {
+		return submittedDate;
 	}
-	public void setSubmitteddate(LocalDateTime submitteddate) {
-		this.submitteddate = submitteddate;
+	public void setSubmittedDate(LocalDateTime submittedDate) {
+		this.submittedDate = submittedDate;
 	}
-	public String getReasonforrejection() {
-		return reasonforrejection;
+	public String getReasonForRejection() {
+		return reasonForRejection;
 	}
-	public void setReasonforrejection(String reasonforrejection) {
-		this.reasonforrejection = reasonforrejection;
+	public void setReasonForRejection(String reasonForRejection) {
+		this.reasonForRejection = reasonForRejection;
 	}
 	@Override
 	public String toString() {
 		return "Request [id=" + id + ", user=" + user + ", description=" + description + ", justification="
-				+ justification + ", dateneeded=" + dateneeded + ", deliverymode=" + deliverymode + ", status=" + status
-				+ ", total=" + total + ", submitteddate=" + submitteddate + ", reasonforrejection=" + reasonforrejection
+				+ justification + ", dateNeeded=" + dateNeeded + ", deliveryMode=" + deliveryMode + ", status=" + status
+				+ ", total=" + total + ", submittedDate=" + submittedDate + ", reasonForRejection=" + reasonForRejection
 				+ "]";
 	}
-
-
+	
 	
 }

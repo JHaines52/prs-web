@@ -13,7 +13,6 @@ import com.prs.db.RequestRepo;
 import com.prs.model.LineItem;
 import com.prs.model.Request;
 
-
 import jakarta.transaction.Transactional;
 
 @CrossOrigin
@@ -29,7 +28,7 @@ public class LineItemController {
 	private RequestRepo requestRepo;
 
 	@Transactional
-	private void recalculateTotal(Request request) {
+	private void recalculateRequestTotal(Request request) {
 		// Fetch all LineItems associated with the given Request
 		List<LineItem> lineitems = lineitemRepo.findByRequestId(request.getId());
 
@@ -41,17 +40,17 @@ public class LineItemController {
 		requestRepo.save(request);
 	}
 
-	
-    @GetMapping("/{requestId}/lines")
-    public  List<LineItem> getLinesForRequest(@PathVariable int requestId) {
-        List<LineItem> lineItems = lineitemRepo.findByRequestId(requestId);
+	@GetMapping("/line-for-prod/{requestId}")
+	public List<LineItem> getLinesForRequest(@PathVariable int requestId) {
+		List<LineItem> lineItems = lineitemRepo.findByRequestId(requestId);
 
-        if (lineItems.isEmpty()) {
-        	throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lineitem Not Found"); // Return 404 Not Found if there are no line items
-        }
+		if (lineItems.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lineitem Not Found"); // Return 404 Not Found if
+																							// there are no line items
+		}
 
-        return lineItems; // Return 200 OK with line items in the body
-    }
+		return lineItems; // Return 200 OK with line items in the body
+	}
 
 	@GetMapping("/{id}")
 	public LineItem getLineitemById(@PathVariable int id) {
@@ -69,16 +68,16 @@ public class LineItemController {
 
 		Request request = lineitem.getRequest();
 		lineitemRepo.save(lineitem);
-		recalculateTotal(request);
+		recalculateRequestTotal(request);
 		return lineitem;
 
 	}
-	
+
 	@PostMapping("/calculatetotal/{id}")
 	public float updateTotal(@PathVariable int id) {
 		LineItem lineitem = lineitemRepo.findById(id).get();
 		Request request = lineitem.getRequest();
-		recalculateTotal(request);
+		recalculateRequestTotal(request);
 		float newTotal = request.getTotal();
 		return newTotal;
 	}
@@ -99,24 +98,25 @@ public class LineItemController {
 		} else {
 			try {
 				item = lineitemRepo.save(lineitem);
+				recalculateRequestTotal(request);
 			} catch (Exception e) {
 				System.err.println(e);
 				throw e;
 			}
 		}
-		recalculateTotal(request);
+		
 		return item;
 	}
 
 	@DeleteMapping("/{id}")
 	public boolean deleteLineitem(@PathVariable int id) {
 		boolean success = false;
-		
+
 		if (lineitemRepo.existsById(id)) {
 			LineItem lineitem = lineitemRepo.findById(id).get();
 			Request request = lineitem.getRequest();
 			lineitemRepo.delete(lineitem);
-			recalculateTotal(request);
+			recalculateRequestTotal(request);
 			success = true;
 		} else {
 			System.err.println("Delete Error: No LineItem exists for id: " + id);

@@ -23,7 +23,7 @@ public class RequestController {
 	private String statusApproved = "APPROVED";
 	private String statusReview = "REVIEW";
 	private String statusRejected = "REJECTED";
-
+	private String statusNew = "NEW";
 
 	@GetMapping("/")
 	public List<Request> getAllRequests() {
@@ -41,11 +41,11 @@ public class RequestController {
 
 	}
 
-	@GetMapping("/underreview/{id}")//the user id is being passed in
+	@GetMapping("/reviews/{userid}") // the user id is being passed in
 	public List<Request> getRequestInReview(@PathVariable int id) {
 
 		List<Request> reviews = requestRepo.findByUserIdNotAndStatus(id, statusReview);
-        
+
 		if (reviews.isEmpty()) {
 			System.err.println("Request reviews not found.");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request Not Found"); // Return Not Found
@@ -56,23 +56,26 @@ public class RequestController {
 
 	@PostMapping("")
 	public Request addRequest(@RequestBody Request request) {
-		
-		  if (request.equals(request.getId())) {
-			  System.err.println("Request already exists.");
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please try again"); // Return Not Found
-	        }
-		
-	
-		 if (request.getSubmitteddate() == null) {
-	            request.setSubmitteddate(LocalDateTime.now());
-	        }
+		Optional<Request> existingRequest = requestRepo.findByDescriptionAndDateneeded(request.getDescription(),
+				request.getDateNeeded());
 
+		if (existingRequest.isPresent()) {
+			System.err.println("A request with the same description and date needed already exists.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request Not Valid");
+		}
+
+		if (request.getSubmittedDate() == null) {
+			request.setSubmittedDate(LocalDateTime.now());
+		}
+		if (request.getStatus() == null) {
+			request.setStatus(statusNew);
+		}
 
 		// TODO Check for existence by request.getId()before save
 		return requestRepo.save(request);
 	}
 
-	@PostMapping("/reviewstatus/{id}")
+	@PostMapping("/review/{id}")
 	public Request reviewStatusRequest(@PathVariable int id) {
 		Request request = requestRepo.findById(id).get();
 
@@ -88,10 +91,10 @@ public class RequestController {
 	@PostMapping("/reject/{id}")
 	public Request rejectRequest(@PathVariable int id) {
 		Optional<Request> r = requestRepo.findById(id);
-		
+
 		if (!r.isPresent()) {
-			 System.err.println("Request not found.");
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please try again");
+			System.err.println("Request not found.");
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please try again");
 		}
 		Request request = r.get();
 
@@ -103,8 +106,8 @@ public class RequestController {
 	@PostMapping("/approve/{id}")
 	public Request approveRequest(@PathVariable int id) {
 		Optional<Request> r = requestRepo.findById(id);
-		
-		if(!r.isPresent()) {
+
+		if (!r.isPresent()) {
 			System.err.println("Request not found.");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please try again");
 		}
@@ -150,5 +153,4 @@ public class RequestController {
 		return success;
 	}
 
-	
 }
