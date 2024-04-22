@@ -19,14 +19,14 @@ public class Request {
 	private String deliveryMode;
 	private String status;
 	private float total = 0.0f;
-	private LocalDateTime submittedDate = LocalDateTime.now();
+	private LocalDate submittedDate = LocalDate.now();
 	private String reasonForRejection;
 	public Request() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	public Request(int id, User user, String description, String justification, LocalDate dateNeeded,
-			String deliveryMode, String status, float total, LocalDateTime submittedDate, String reasonForRejection) {
+			String deliveryMode, String status, float total, LocalDate submittedDate, String reasonForRejection) {
 		super();
 		this.id = id;
 		this.user = user;
@@ -87,10 +87,10 @@ public class Request {
 	public void setTotal(float total) {
 		this.total = total;
 	}
-	public LocalDateTime getSubmittedDate() {
+	public LocalDate getSubmittedDate() {
 		return submittedDate;
 	}
-	public void setSubmittedDate(LocalDateTime submittedDate) {
+	public void setSubmittedDate(LocalDate submittedDate) {
 		this.submittedDate = submittedDate;
 	}
 	public String getReasonForRejection() {

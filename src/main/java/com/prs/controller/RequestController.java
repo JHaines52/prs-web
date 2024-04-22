@@ -1,5 +1,6 @@
 package com.prs.controller;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.prs.db.RequestRepo;
-
+import com.prs.model.Product;
 import com.prs.model.Request;
 
 @CrossOrigin
@@ -41,7 +42,7 @@ public class RequestController {
 
 	}
 
-	@GetMapping("/reviews/{userid}") // the user id is being passed in
+	@GetMapping("/reviews/{id}") // the user id is being passed in
 	public List<Request> getRequestInReview(@PathVariable int id) {
 
 		List<Request> reviews = requestRepo.findByUserIdNotAndStatus(id, statusReview);
@@ -56,24 +57,14 @@ public class RequestController {
 
 	@PostMapping("")
 	public Request addRequest(@RequestBody Request request) {
-		Optional<Request> existingRequest = requestRepo.findByDescriptionAndDateneeded(request.getDescription(),
-				request.getDateNeeded());
-
-		if (existingRequest.isPresent()) {
-			System.err.println("A request with the same description and date needed already exists.");
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request Not Valid");
-		}
-
-		if (request.getSubmittedDate() == null) {
-			request.setSubmittedDate(LocalDateTime.now());
-		}
-		if (request.getStatus() == null) {
-			request.setStatus(statusNew);
-		}
-
-		// TODO Check for existence by request.getId()before save
+		request.setStatus(statusNew);
+		//total 0
+		request.setTotal(0);
+		//current dates
+		request.setSubmittedDate(LocalDate.now());
 		return requestRepo.save(request);
 	}
+	
 
 	@PostMapping("/review/{id}")
 	public Request reviewStatusRequest(@PathVariable int id) {
@@ -93,7 +84,7 @@ public class RequestController {
 		Optional<Request> r = requestRepo.findById(id);
 
 		if (!r.isPresent()) {
-			System.err.println("Request not found.");
+			System.err.println("Request not rejected.");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please try again");
 		}
 		Request request = r.get();
@@ -108,7 +99,7 @@ public class RequestController {
 		Optional<Request> r = requestRepo.findById(id);
 
 		if (!r.isPresent()) {
-			System.err.println("Request not found.");
+			System.err.println("Request not approved.");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please try again");
 		}
 		Request request = requestRepo.findById(id).get();

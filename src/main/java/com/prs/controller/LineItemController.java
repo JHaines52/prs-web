@@ -22,7 +22,7 @@ import jakarta.transaction.Transactional;
 public class LineItemController {
 
 	@Autowired // Initializes create variable
-	private LineItemRepo lineitemRepo;
+	private LineItemRepo lineItemRepo;
 
 	@Autowired
 	private RequestRepo requestRepo;
@@ -30,19 +30,19 @@ public class LineItemController {
 	@Transactional
 	private void recalculateRequestTotal(Request request) {
 		// Fetch all LineItems associated with the given Request
-		List<LineItem> lineitems = lineitemRepo.findByRequestId(request.getId());
+		List<LineItem> lineItems = lineItemRepo.findByRequestId(request.getId());
 
 		// Calculate the total
-		double total = lineitems.stream().mapToDouble(item -> item.getQuantity() * item.getProduct().getPrice()).sum();
+		double total = lineItems.stream().mapToDouble(item -> item.getQuantity() * item.getProduct().getPrice()).sum();
 
 		// Set the new total and save the Request
 		request.setTotal((float) total);
 		requestRepo.save(request);
 	}
-
-	@GetMapping("/line-for-prod/{requestId}")
+// lines for requests
+	@GetMapping("/lines/{requestId}")
 	public List<LineItem> getLinesForRequest(@PathVariable int requestId) {
-		List<LineItem> lineItems = lineitemRepo.findByRequestId(requestId);
+		List<LineItem> lineItems = lineItemRepo.findByRequestId(requestId);
 
 		if (lineItems.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lineitem Not Found"); // Return 404 Not Found if
@@ -53,8 +53,8 @@ public class LineItemController {
 	}
 
 	@GetMapping("/{id}")
-	public LineItem getLineitemById(@PathVariable int id) {
-		Optional<LineItem> item = lineitemRepo.findById(id);
+	public LineItem getLineItemById(@PathVariable int id) {
+		Optional<LineItem> item = lineItemRepo.findById(id);
 		if (item.isPresent()) {
 			return item.get();
 		} else {
@@ -64,40 +64,40 @@ public class LineItemController {
 
 	// Method to add a new Lineitem
 	@PostMapping("")
-	public LineItem addLineitem(@RequestBody LineItem lineitem) {
+	public LineItem addLineItem(@RequestBody LineItem lineItem) {
 
-		Request request = lineitem.getRequest();
-		lineitemRepo.save(lineitem);
+		Request request = lineItem.getRequest();
+		lineItemRepo.save(lineItem);
 		recalculateRequestTotal(request);
-		return lineitem;
+		return lineItem;
 
 	}
 
 	@PostMapping("/calculatetotal/{id}")
 	public float updateTotal(@PathVariable int id) {
-		LineItem lineitem = lineitemRepo.findById(id).get();
-		Request request = lineitem.getRequest();
+		LineItem lineItem = lineItemRepo.findById(id).get();
+		Request request = lineItem.getRequest();
 		recalculateRequestTotal(request);
 		float newTotal = request.getTotal();
 		return newTotal;
 	}
 
 	@PutMapping("/{id}")
-	public LineItem updateLineitem(@PathVariable int id, @RequestBody LineItem lineitem) {
+	public LineItem updateLineItem(@PathVariable int id, @RequestBody LineItem lineItem) {
 
 		LineItem item = null;
-		Request request = lineitem.getRequest();
+		Request request = lineItem.getRequest();
 
-		if (id != lineitem.getId()) {
+		if (id != lineItem.getId()) {
 			System.err.println("Lineitem id does not match path id.");
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Lineitem Not Found");
 
-		} else if (!lineitemRepo.existsById(id)) {
+		} else if (!lineItemRepo.existsById(id)) {
 			System.err.println("Lineitem does not exist for id: " + id);
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie Not Found");
 		} else {
 			try {
-				item = lineitemRepo.save(lineitem);
+				item = lineItemRepo.save(lineItem);
 				recalculateRequestTotal(request);
 			} catch (Exception e) {
 				System.err.println(e);
@@ -109,13 +109,13 @@ public class LineItemController {
 	}
 
 	@DeleteMapping("/{id}")
-	public boolean deleteLineitem(@PathVariable int id) {
+	public boolean deleteLineItem(@PathVariable int id) {
 		boolean success = false;
 
-		if (lineitemRepo.existsById(id)) {
-			LineItem lineitem = lineitemRepo.findById(id).get();
-			Request request = lineitem.getRequest();
-			lineitemRepo.delete(lineitem);
+		if (lineItemRepo.existsById(id)) {
+			LineItem lineItem = lineItemRepo.findById(id).get();
+			Request request = lineItem.getRequest();
+			lineItemRepo.delete(lineItem);
 			recalculateRequestTotal(request);
 			success = true;
 		} else {

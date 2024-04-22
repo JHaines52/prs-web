@@ -12,7 +12,7 @@ import com.prs.model.Request;
 
 public interface RequestRepo extends JpaRepository<Request, Integer>{
 	List<Request> findByStatus(String status);
-	List<Request> findByUserIdNotAndStatus(Integer userId, String status);
+	List<Request> findByUserIdNotAndStatus(Integer userid, String status);
 	
-	Optional<Request> findByDescriptionAndDateneeded(String description, LocalDate dateneeded);
+//	Optional<Request> findByDescriptionAndDateneeded(String description, LocalDate dateNeeded);
 }

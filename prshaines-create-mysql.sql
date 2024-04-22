@@ -56,7 +56,7 @@ CREATE Table Request (
 	DeliveryMode varchar(25) NOT NULL DEFAULT 'Pickup',
 	Status varchar(20) NOT NULL DEFAULT 'NEW',
 	Total decimal(10,2) NOT NULL DEFAULT 0.0,
-	SubmittedDate datetime NOT NULL default current_timestamp,
+	SubmittedDate date NOT NULL,
 	ReasonForRejection varchar(100),
 	FOREIGN KEY (UserId) REFERENCES User(Id)
 );
