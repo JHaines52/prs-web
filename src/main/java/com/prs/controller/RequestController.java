@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.prs.db.RequestRepo;
+import com.prs.model.LineItem;
 import com.prs.model.Product;
 import com.prs.model.Request;
 
@@ -41,6 +42,7 @@ public class RequestController {
 		}
 
 	}
+	
 
 	@GetMapping("/reviews/{id}") // the user id is being passed in
 	public List<Request> getRequestInReview(@PathVariable int id) {
@@ -53,6 +55,18 @@ public class RequestController {
 		}
 
 		return reviews; // Return the list of review requests
+	}
+	
+	@GetMapping("/user/{userId}")//get all requests for a user 
+	public List<Request> getRequestsByUserId(@PathVariable int userId) {
+		List<Request> requests = requestRepo.findByUserId(userId);
+
+		if (requests.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lineitem Not Found"); // Return 404 Not Found if
+																							// there are no line items
+		}
+
+		return requests; // Return 200 OK with line items in the body
 	}
 
 	@PostMapping("")

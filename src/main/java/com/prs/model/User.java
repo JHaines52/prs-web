@@ -15,6 +15,7 @@ public class User {
 	private String email;
 	private boolean reviewer;
 	private boolean admin;
+	private String profilePhoto;
 
 	public User() {
 		super();
@@ -22,7 +23,7 @@ public class User {
 	}
 
 	public User(int id, String username, String password, String firstname, String lastname, String phone, String email,
-			boolean reviewer, boolean admin) {
+			boolean reviewer, boolean admin, String profilePhoto) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -33,6 +34,7 @@ public class User {
 		this.email = email;
 		this.reviewer = reviewer;
 		this.admin = admin;
+		this.profilePhoto = profilePhoto;
 	}
 
 	public int getId() {
@@ -105,6 +107,12 @@ public class User {
 
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
+	}
+	public String getProfilePhoto() {
+		return profilePhoto;
+	}
+	public void setProfilePhoto(String profilePhoto) {
+		this.profilePhoto = profilePhoto;
 	}
 
 	@Override

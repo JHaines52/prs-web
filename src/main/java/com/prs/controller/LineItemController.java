@@ -51,6 +51,11 @@ public class LineItemController {
 
 		return lineItems; // Return 200 OK with line items in the body
 	}
+	
+	@GetMapping("/")
+	public List<LineItem> getAllLineItems() {
+		return lineItemRepo.findAll();
+	}
 
 	@GetMapping("/{id}")
 	public LineItem getLineItemById(@PathVariable int id) {
